@@ -1,0 +1,61 @@
+full_name,email,phone,city,experience_years,current_ctc,applied_date,skills,gig_rate,gig_status,cbnexus_verified,projects_completed
+Tanvi Gupta,tanvi.gupta31@example.com,9000000254,Bengaluru,4.2,417964.0,2026-07-24,"Langchain, Mongodb, N8N, Rest Apis, Sql",1331/hr,Paused,False,14
+Manish Reddy,manish.reddy73@example.com,9000000237,Gurgaon,3.5,332456.0,2026-08-08,"Docker, Javascript, Zapier",,,,
+Priya Singh,priya.singh61@mailtest.example.org,9000000287,Gurgaon,3.0,775670.0,2026-01-08,"Mysql, N8N, Python, React, Sql, Zapier",,,True,3
+Vikram Saxena,vikram.saxena60@example.com,9000000113,Gurgaon,1.9,654699.0,2026-07-07,"Docker, Fastapi, React, Selenium, Sql, Web Scraping",843/hr,Active,False,15
+Amit Agarwal,amit.agarwal3@mailtest.example.org,9000000288,Pune,1.8,420000.0,2026-07-19,"Docker, Javascript, Python, Sql",,,,
+Sahil Malhotra,sahil.malhotra1@example.in,9000000143,Noida,1.7,806661.0,2026-07-13,"Docker, Fastapi, Mysql, Pandas, Rest Apis, Zapier",,,False,0
+Shreya Gupta,shreya.gupta85@example.com,9000000227,Noida,3.3,830000.0000000001,2026-07-19,"Docker, N8N, Python, Web Scraping, Zapier",,,True,13
+Isha Chopra,isha.chopra95@mailtest.example.org,9000000138,Pune,5.4,472935.0,2026-08-02,"Javascript, Mysql, React",1406/hr,Active,False,7
+Priya Nair,priya.nair70@example.com,9000000222,Gurugram,5.6,366311.0,2026-07-28,"N8N, Python, React, Rest Apis, Web Scraping, Zapier",,,,
+Rohit Mishra,rohit.mishra70@mailtest.example.org,9000000167,Delhi,4.4,871686.0,2026-07-13,"Docker, Fastapi, Mysql, Pandas, Sql, Zapier",,,,
+Rahul Malhotra,rahul.malhotra69@mailtest.example.org,9000000260,New Delhi,2.5,864237.0,2026-07-03,"Mongodb, Mysql, Rest Apis, Selenium, Sql",,,False,4
+Rahul Jain,rahul.jain34@example.in,9000000114,Noida,2.8,1195422.0,2026-06-24,"Docker, Python, Selenium, Zapier",,,,
+Nikhil Malhotra,nikhil.malhotra41@example.in,9000000145,New Delhi,4.2,509999.99999999994,2026-08-21,"Fastapi, Javascript, Python, Sql, Web Scraping",,,,
+Karan Bhatia,karan.bhatia32@mailtest.example.org,9000000211,Noida,4.7,826748.0,2026-07-08,"Javascript, Mongodb, Selenium, Sql, Web Scraping, Zapier",403/hr,Active,True,2
+Ritu Sharma,ritu.sharma23@mailtest.example.org,9000000146,Noida,4.8,610000.0,2026-08-03,"Mongodb, N8N, React, Sql, Web Scraping",,,True,15
+Arjun Mishra,arjun.mishra70@example.com,9000000106,Delhi,1.3,580000.0,2026-08-22,"Docker, Javascript, React",440/hr,Active,False,10
+Meera Bhatia,meera.bhatia52@mailtest.example.org,9000000223,Delhi Ncr,5.1,1120000.0,2026-07-03,"Docker, Langchain, Mysql, Python, React, Sql",330/hr,Active,False,4
+Varun Jain,varun.jain29@example.com,9000000263,Pune,3.1,760000.0,2026-08-19,"Fastapi, Mongodb, Mysql, N8N, Pandas, Web Scraping",1415/hr,Active,True,14
+Arjun Mehta,arjun.mehta9@example.in,9000000131,Noida,4.0,1181149.0,2026-07-21,"N8N, Selenium, Sql",,,False,9
+Kavya Mehta,kavya.mehta7@example.com,9000000177,Bengaluru,5.1,240000.0,2026-07-02,"Fastapi, Mongodb, N8N, Pandas, React",,,,
+Sneha Chopra,sneha.chopra99@example.in,9000000162,Pune,4.9,1000000.0,2026-03-07,"Javascript, Mysql, Pandas, React, Sql",28k/month,Active,False,14
+Deepak Mehta,deepak.mehta86@example.in,9000000116,Noida,2.7,327287.0,2026-07-23,"Langchain, Mongodb, Mysql, N8N, Rest Apis, Selenium",,,True,11
+Pooja Gupta,pooja.gupta57@mailtest.example.org,9000000271,Noida,3.9,1190000.0,2026-06-24,"Docker, Mysql, N8N, Selenium, Sql",,,,
+R. Verma,rohit.verma13@mailtest.example.org,9000000294,Bangalore,2.4,610000.0,2026-08-13,"Mongodb, Python, React",,,,
+Sneha Mishra,sneha.mishra14@mailtest.example.org,9000000229,Pune,1.4,410629.0,2026-06-15,"Docker, Mysql, Pandas, Selenium",,,,
+Nikhil Chopra,alt.nikhil.chopra70@example.com,9000000103,Noida,0.8,780000.0,2026-07-03,"N8N, Pandas, Sql",,,,
+Priya Saxena,priya.saxena61@example.com,9000000231,Delhi,5.0,660000.0,2026-08-16,"Mysql, Python, React, Zapier",,,False,12
+Varun Saxena,varun.saxena21@example.in,9000000170,Gurugram,3.7,775796.0,2026-07-05,"Langchain, Mongodb, Mysql, Rest Apis, Sql, Zapier",917/hr,Inactive,True,1
+Gaurav Mehta,gaurav.mehta79@mailtest.example.org,9000000133,Bengaluru,3.1,792474.0,2026-07-19,"Fastapi, Rest Apis, Selenium, Sql",56k/month,Active,False,1
+Rohit Nair,rohit.nair32@mailtest.example.org,9000000268,Gurugram,2.4,760000.0,2026-08-19,"Docker, N8N, Rest Apis, Web Scraping",,,True,13
+Deepak Nair,deepak.nair44@example.com,9000000296,Bangalore,5.0,1160787.0,2026-07-15,"Mongodb, N8N, Pandas, React",465/hr,Paused,True,2
+Rahul Chopra,rahul.chopra70@example.com,9000000137,Noida,1.7,270000.0,2026-07-27,"Docker, Python, Zapier",72k/month,Inactive,False,10
+Deepak Singh,deepak.singh36@mailtest.example.org,9000000202,Bangalore,1.7,1135514.0,2026-08-11,"Docker, Fastapi, React, Web Scraping",,,,
+Amit Reddy,amit.reddy9@mailtest.example.org,9000000165,Delhi Ncr,2.7,1140000.0,2026-07-21,"Langchain, Mysql, React",,,,
+Tanvi Agarwal,tanvi.agarwal97@example.in,9000000148,Pune,5.0,626740.0,2026-07-27,"Fastapi, Mongodb, Rest Apis, Web Scraping",1231/hr,Active,False,3
+Nikhil Mehta,nikhil.mehta5@example.com,9000000104,Pune,2.9,930000.0000000001,2026-07-26,"Docker, Langchain, Python, React, Selenium, Zapier",,,True,10
+Isha Kapoor,isha.kapoor54@example.com,9000000295,New Delhi,5.1,590000.0,2026-08-21,"Fastapi, Javascript, Mysql, Python, React, Selenium",15k/month,Active,True,6
+Arjun Bhatia,arjun.bhatia14@example.com,9000000212,New Delhi,1.5,621881.0,2026-02-06,"Fastapi, Pandas, Rest Apis, Sql, Web Scraping, Zapier",,,,
+Isha Sharma,isha.sharma15@example.com,9000000259,Delhi,3.5,1030000.0000000001,2026-07-12,"Javascript, Mongodb, N8N, Python, Rest Apis, Selenium",,,,
+Neha Bhatia,neha.bhatia60@mailtest.example.org,9000000273,Pune,4.2,694306.0,2026-07-22,"Fastapi, Javascript, Selenium, Zapier",79k/month,Active,False,10
+Arjun Mehta,arjun.mehta77@mailtest.example.org,,Noida,,,,"Docker, Fastapi, Mysql, Pandas, Web Scraping, Zapier",42k/month,Inactive,,
+Manish Bhatia,manish.bhatia3@example.com,,Noida,,,,"Docker, Javascript, Pandas, React, Rest Apis, Web Scraping",73k/month,Active,,
+Divya Chopra,divya.chopra59@example.in,,Noida,,,,"Docker, Fastapi, Mongodb, Zapier",55k/month,Inactive,,
+Karan Chopra,karan.chopra76@mailtest.example.org,,Pune,,,,"Mongodb, N8N, Pandas, Python, Selenium",437/hr,Active,,
+Vikram Mehta,vikram.mehta6@example.com,,Pune,,,,"Langchain, Python, Rest Apis",22k/month,Active,,
+Pooja Kapoor,pooja.kapoor62@example.in,,Noida,,,,"React, Rest Apis, Sql",21k/month,Active,,
+Kavya Verma,kavya.verma74@mailtest.example.org,,Gurugram,,,,"Pandas, React, Sql, Web Scraping",1483/hr,Active,,
+Tanvi Reddy,tanvi.reddy80@example.com,,Pune,,,,"Docker, Langchain, Python, Rest Apis, Sql",59k/month,Paused,,
+Varun Singh,varun.singh81@example.com,,Noida,,,,"Fastapi, Mongodb, Python, React",763/hr,Active,,
+Tanvi Kapoor,tanvi.kapoor38@example.com,,New Delhi,,,,"Docker, Mysql, Selenium, Web Scraping",38k/month,Active,,
+Nikhil Nair,nikhil.nair26@example.in,,Gurugram,,,,"N8N, Python, Web Scraping",1018/hr,Active,,
+Pooja Reddy,pooja.reddy96@mailtest.example.org,,Noida,,,,"Docker, Fastapi, Pandas, Sql, Web Scraping",590/hr,Inactive,,
+Tanvi Sharma,tanvi.sharma56@mailtest.example.org,,Noida,,,,"Fastapi, Langchain, N8N, Python, Web Scraping",73k/month,Active,,
+Deepak Nair,deepak.nair57@example.in,,New Delhi,,,,"Docker, Javascript, Mysql, React, Sql, Web Scraping",1462/hr,Active,,
+Anjali Agarwal,anjali.agarwal53@mailtest.example.org,,Bengaluru,,,,"Docker, Javascript, React, Rest Apis, Selenium, Sql",71k/month,Inactive,,
+Arjun Mehta,,9000000272,Noida,,,,,,,True,14
+Manish Bhatia,,9000000161,Noida,,,,,,,True,5
+Divya Chopra,,9000000111,Noida,,,,,,,False,5
+Karan Chopra,,9000000245,Pune,,,,,,,False,10
+Vikram Mehta,,9000000261,Pune,,,,,,,True,2
