@@ -14,22 +14,59 @@ def clean_phone(phone):
         return None
     s = str(phone)
     # Remove all non-digits
-    s = re.sub(r'\D', '', s)
+    cleaned_s = re.sub(r'\D', '', s)
     # Strip leading country code for Indian numbers if it exists
-    if len(s) > 10 and s.startswith('91'):
-        s = s[2:]
-    elif len(s) > 10 and s.startswith('0'):
-        s = s[1:]
-    return s if s else None
+    if len(cleaned_s) > 10 and cleaned_s.startswith('91'):
+        cleaned_s = cleaned_s[2:]
+    elif len(cleaned_s) > 10 and cleaned_s.startswith('0'):
+        cleaned_s = cleaned_s[1:]
+    
+    if s != cleaned_s and cleaned_s:
+        log_issue(f"Format resolution: Phone number '{s}' cleaned to '{cleaned_s}'")
+    return cleaned_s if cleaned_s else None
 
 def clean_email(email):
     if pd.isna(email):
         return None
-    email = str(email).strip().lower()
-    if '@' not in email:
-        log_issue(f"Invalid email format found: {email}")
+    email_str = str(email).strip()
+    email_lower = email_str.lower()
+    if '@' not in email_lower:
+        log_issue(f"Anomaly: Invalid email format found -> {email_str}")
         return None
-    return email
+    if email_str != email_lower:
+        log_issue(f"Format resolution: Uppercase email '{email_str}' lowercased to '{email_lower}'")
+    return email_lower
+
+def standardize_city(city):
+    if pd.isna(city) or not city: return None
+    original = str(city).strip()
+    c = original.lower()
+    standard = original.title()
+    
+    if 'delhi' in c: standard = 'New Delhi'
+    elif 'gurgaon' in c or 'gurugram' in c: standard = 'Gurugram'
+    elif 'bangalore' in c or 'bengaluru' in c: standard = 'Bengaluru'
+    elif 'noida' in c: standard = 'Noida'
+    elif 'pune' in c: standard = 'Pune'
+    
+    if original != standard and original.lower() != standard.lower():
+        log_issue(f"Entity matching: City '{original}' standardized to '{standard}'")
+        
+    return standard
+
+def standardize_gig_rate(rate):
+    if pd.isna(rate) or not rate: return None
+    r = str(rate).lower().replace(' ', '')
+    if 'k/month' in r:
+        try: return f"{int(float(r.replace('k/month', '')) * 1000)}/month"
+        except: pass
+    elif '/month' in r:
+        try: return f"{int(float(r.replace('/month', '')))}/month"
+        except: pass
+    elif '/hr' in r:
+        try: return f"{int(float(r.replace('/hr', '')))}/hr"
+        except: pass
+    return str(rate)
 
 def main():
     print("Loading CSV files...")
@@ -41,9 +78,9 @@ def main():
     # Clean df1
     df1['Email_clean'] = df1['Email'].apply(clean_email)
     df1['Phone_clean'] = df1['Phone'].apply(clean_phone)
-    df1['City_clean'] = df1['City'].str.title().str.strip()
+    df1['City_clean'] = df1['City'].apply(standardize_city)
     df1['Name_clean'] = df1['Full Name'].str.title().str.strip()
-    df1['Applied Date_clean'] = pd.to_datetime(df1['Applied Date'], format='mixed', errors='coerce')
+    df1['Applied Date_clean'] = pd.to_datetime(df1['Applied Date'], format='mixed', dayfirst=True, errors='coerce')
     
     def clean_ctc(ctc):
         if pd.isna(ctc): return None
@@ -51,8 +88,8 @@ def main():
         try:
             val = float(s)
             if val < 100: # assuming it's in LPA (e.g., 4.2 -> 420000)
-                return val * 100000
-            return val
+                val = val * 100000
+            return int(val)
         except:
             return None
             
@@ -60,13 +97,14 @@ def main():
 
     # Clean df2
     df2['Email_clean'] = df2['email_id'].apply(clean_email)
-    df2['City_clean'] = df2['location'].str.title().str.strip()
+    df2['City_clean'] = df2['location'].apply(standardize_city)
     df2['Name_clean'] = df2['worker_name'].str.title().str.strip()
     df2['status_clean'] = df2['status'].str.title().str.strip()
+    df2['rate_clean'] = df2['rate'].apply(standardize_gig_rate)
 
     # Clean df3
     df3['Phone_clean'] = df3['Phone Number'].apply(clean_phone)
-    df3['City_clean'] = df3['City'].str.title().str.strip()
+    df3['City_clean'] = df3['City'].apply(standardize_city)
     df3['Name_clean'] = df3['Name'].str.title().str.strip()
     df3['Verified_clean'] = df3['Verified'].str.lower().map({'y': True, 'yes': True, 'n': False, 'no': False})
 
@@ -209,28 +247,35 @@ def main():
                 merged_skills.extend(tags)
         final_skills = ", ".join(sorted(list(set(merged_skills)))) if merged_skills else None
 
+        sources = []
+        if r1 is not None: sources.append("Naukri")
+        if r2 is not None: sources.append("Gig")
+        if r3 is not None: sources.append("CBNexus")
+        if len(sources) > 1:
+            log_issue(f"Entity Merge: Linked {final_name} across sources: {', '.join(sources)} (Email: {final_email}, Phone: {final_phone})")
+            
         profile = {
-            'full_name': final_name,
-            'email': final_email,
-            'phone': final_phone,
-            'city': final_city,
-            'experience_years': r1['Experience (Years)'] if r1 is not None else None,
-            'current_ctc': r1['CTC_clean'] if r1 is not None else None,
-            'applied_date': r1['Applied Date_clean'] if r1 is not None else None,
-            'skills': final_skills,
-            'gig_rate': r2['rate'] if r2 is not None else None,
-            'gig_status': r2['status_clean'] if r2 is not None else None,
-            'cbnexus_verified': r3['Verified_clean'] if r3 is not None else None,
-            'projects_completed': r3['Projects Completed'] if r3 is not None else None
+            'Full Name': final_name,
+            'Email': final_email,
+            'Phone': final_phone,
+            'City': final_city,
+            'Experience (Years)': r1['Experience (Years)'] if r1 is not None else None,
+            'Current CTC': r1['CTC_clean'] if r1 is not None else None,
+            'Applied Date': r1['Applied Date_clean'].strftime('%d/%m/%Y') if r1 is not None and pd.notna(r1['Applied Date_clean']) else None,
+            'Skills': final_skills,
+            'Gig Rate': r2['rate_clean'] if r2 is not None else None,
+            'Gig Status': r2['status_clean'] if r2 is not None else None,
+            'CBNexus Verified': r3['Verified_clean'] if r3 is not None else None,
+            'Projects Completed': r3['Projects Completed'] if r3 is not None else None
         }
         consolidated_data.append(profile)
 
     consolidated_df = pd.DataFrame(consolidated_data)
 
-    print("\n================== DATA ISSUES LOG ==================")
+    print("\n================== DATA ISSUES & MERGE LOG ==================")
     for issue in issues_log:
         print(f"- {issue}")
-    print("=====================================================\n")
+    print("=============================================================\n")
 
     print(f"Total Unique Persons Extracted: {len(consolidated_df)}")
 
