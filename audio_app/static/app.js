@@ -230,8 +230,16 @@ async function loadDashboard() {
             
             data.data.forEach(row => {
                 let badgeClass = 'tier-retake';
-                if (row.quality_tier && row.quality_tier.includes('Gold')) badgeClass = 'tier-gold';
-                else if (row.quality_tier && row.quality_tier.includes('Silver')) badgeClass = 'tier-silver';
+                let tierText = row.quality_tier || 'Pending';
+                
+                if (row.qa_status === 'Rejected') {
+                    tierText = 'Rejected';
+                    badgeClass = 'tier-retake';
+                } else if (tierText.includes('Gold')) {
+                    badgeClass = 'tier-gold';
+                } else if (tierText.includes('Silver')) {
+                    badgeClass = 'tier-silver';
+                }
                 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -239,7 +247,7 @@ async function loadDashboard() {
                     <td>${row.phone || '-'}</td>
                     <td>${row.file_url ? `<audio controls src="${row.file_url}" style="height:35px;"></audio>` : 'N/A'}</td>
                     <td>${row.duration_sec !== null && row.duration_sec !== undefined ? row.duration_sec + 's' : '-'}</td>
-                    <td><span class="tier-badge ${badgeClass}">${row.quality_tier || 'Pending'}</span></td>
+                    <td><span class="tier-badge ${badgeClass}">${tierText}</span></td>
                     <td>${row.loudness_db !== null && row.loudness_db !== undefined ? row.loudness_db + ' dB' : '-'}</td>
                     <td>${row.bitrate_kbps !== null && row.bitrate_kbps !== undefined ? row.bitrate_kbps + ' kbps' : '-'}</td>
                     <td>${row.sample_rate_khz !== null && row.sample_rate_khz !== undefined ? row.sample_rate_khz + ' kHz' : '-'}</td>

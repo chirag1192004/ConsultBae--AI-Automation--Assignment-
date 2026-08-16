@@ -115,3 +115,11 @@ During the data ingestion, several data quality issues were identified and progr
 **7. Task 5 Speech-to-Text Constraints**
 - **Where I got stuck**: For the Stretch Goal, I wanted a recruiter to speak to the app to find candidates, but doing Speech-to-Text on WebM blobs in Python requires external APIs or heavy Whisper models.
 - **How I got unstuck**: I bypassed the backend entirely and used the browser's native `webkitSpeechRecognition` API. This instantly transcribes the recruiter's voice to text for free, sending the final transcript to the backend which uses an intent matcher to query the database.
+
+**8. n8n Context Loss Across Branches (Zero Rows Updated)**
+- **Where I got stuck**: The n8n automation was successfully evaluating audio as "Rejected", but the final Postgres `UPDATE` node was modifying 0 rows in the database, leaving the status stuck on "Pending". The `WHERE id = {{ $('Execute a SQL query').item.json.id }}` expression was resolving to null.
+- **How I got unstuck**: I realized that routing data through an "If" node can cause n8n to lose track of `.item` context. I updated the expression to explicitly grab the first item outputted by the initial node: `{{ $('Execute a SQL query').first().json.id }}`. This flawlessly mapped the ID across all branches.
+
+**9. Frontend False-Positives (The Cache Bug)**
+- **Where I got stuck**: Even after the database confirmed the rows were marked as "Rejected", the browser dashboard still displayed a giant "Pending" badge. 
+- **How I got unstuck**: I discovered two issues. First, a logic flaw in `app.js` defaulted the badge text to "Pending" if `quality_tier` was NULL (which is always true for rejected audio). After fixing the JavaScript to explicitly check `qa_status === 'Rejected'`, the browser aggressively cached the old code. A hard refresh (`Ctrl + F5`) cleared the cache, allowing the new code to properly render the red "Rejected" badges!
