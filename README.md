@@ -3,8 +3,7 @@
 ## Progress Report
 - [x] **Task 1 (Merge)**: Completed.
   - Successfully merged 3 messy CSV files (Naukri, Gig, CBNexus) into a single PostgreSQL database schema without duplicates.
-- [x] **Task 2 (Automation)**: Completed.
-  - Built an "Audio Submission QA & Auto-Triage Agent" in n8n (exported as `n8n_workflow.json`) that processes audio data, checks thresholds, and flags for review.
+- [ ] **Task 2 (Automation)**: Pending.
 - [x] **Task 3 (Audio App)**: Completed.
   - Developed a full-stack SPA with FastAPI and Vanilla JS featuring live browser recording, file uploads, audio metadata extraction (duration, bitrate, loudness), and a real-time dashboard.
 - [ ] **Task 4 (Data Issues Report)**: Integrated below for Task 1.
