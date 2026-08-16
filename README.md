@@ -39,9 +39,10 @@ python ingest_data.py
 ## Setup Steps (Task 2 & 3)
 
 ### 1. n8n Automation (Task 2)
-1. Open your **local desktop version of n8n** (running natively on your machine, not in Docker).
+The `n8n` platform runs natively in our Docker cluster on port `5678`.
+1. Go to `http://localhost:5678` and complete the initial setup.
 2. Click **Import from File** and upload the `n8n_workflow.json` located in this repository.
-3. Configure the **Postgres Nodes** to connect to the Docker Database using the external host mapping: `localhost` (Port: `5433`, User: `admin`, Pass: `password123`, DB: `cbnexus_db`).
+3. Configure the **Postgres Nodes** to connect to our local DB using the internal Docker IP: `172.19.0.2` (Port: `5432`, User: `admin`, Pass: `password123`, DB: `cbnexus_db`).
 
 ### 2. Audio Collection Web App (Task 3)
 We built a premium, glassmorphism-themed Audio Application.
@@ -93,9 +94,9 @@ During the data ingestion, several data quality issues were identified and progr
 - **Where I got stuck**: I needed to merge the same person across 3 files, but realized Gig and CBNexus had absolutely no common fields (one has Email, the other has Phone).
 - **How I got unstuck**: I decided to use Graph Theory. I used the `networkx` library to represent Emails and Phones as nodes. The Naukri dataset (which has both) creates the "edges" (connections). Finding the "connected components" in this graph perfectly clustered all records belonging to the same person, allowing me to assign a single unique `person_id` across all three datasets effortlessly.
 
-**3. n8n Desktop vs. Docker Host Routing**
-- **Where I got stuck**: While setting up the Postgres node inside n8n (Task 2), n8n returned a "Connection Refused" error when using `localhost:5432`, and a "Host Not Found" when using the docker service name `db`. 
-- **How I got unstuck**: I realized that I was actually running a local Desktop version of n8n on my machine, not the one inside the Docker network. Because it was running natively on my OS (outside Docker), it couldn't resolve the internal Docker DNS name `db` or use the internal `5432` port. I fixed it by pointing the n8n Postgres node to `localhost` with the externally mapped port `5433`, bypassing the Docker network boundaries seamlessly.
+**3. n8n Docker Host Routing & DNS**
+- **Where I got stuck**: While setting up the Postgres node inside the n8n Docker container at `http://localhost:5678` (Task 2), n8n returned a "Connection Refused" error when using `localhost`, and a "Host Not Found" when using the docker service name `db` (even though they are on the same Docker network).
+- **How I got unstuck**: Because n8n runs inside a Docker container, `localhost` points to the n8n container itself, not the host machine. Furthermore, due to a Docker DNS glitch on Windows, the service hostname `db` wasn't resolving properly in the n8n UI. I bypassed the Docker DNS entirely by retrieving the explicit internal docker IP for the Postgres container (`172.19.0.2`) and used that to instantly establish the connection.
 
 **4. Browser Audio Extraction (Missing FFmpeg)**
 - **Where I got stuck**: Extracting metadata (Loudness, Bitrate) from browser-recorded `.webm` audio blobs requires `ffmpeg` bindings in Python (via `pydub`), which caused fatal crash loops (`audioop` missing in Python 3.13) when the binary wasn't perfectly configured on the host machine.
