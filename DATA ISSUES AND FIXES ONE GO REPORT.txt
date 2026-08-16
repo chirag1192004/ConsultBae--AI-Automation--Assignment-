@@ -1,0 +1,92 @@
+================== DATA ISSUES & MERGE LOG ==================
+- Format resolution: Phone number '919000000254' cleaned to '9000000254'
+- Format resolution: Phone number '919000000288' cleaned to '9000000288'
+- Format resolution: Phone number '919000000143' cleaned to '9000000143'
+- Format resolution: Phone number '919000000222' cleaned to '9000000222'
+- Format resolution: Phone number '919000000211' cleaned to '9000000211'
+- Format resolution: Phone number '919000000177' cleaned to '9000000177'
+- Format resolution: Phone number '919000000162' cleaned to '9000000162'
+- Format resolution: Phone number '919000000231' cleaned to '9000000231'
+- Format resolution: Phone number '919000000268' cleaned to '9000000268'
+- Format resolution: Phone number '919000000148' cleaned to '9000000148'
+- Format resolution: Phone number '919000000295' cleaned to '9000000295'
+- Format resolution: Phone number '919000000259' cleaned to '9000000259'
+- Entity matching: City 'GURGAON' standardized to 'Gurugram'
+- Entity matching: City 'GURGAON' standardized to 'Gurugram'
+- Entity matching: City 'GURGAON' standardized to 'Gurugram'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Delhi NCR' standardized to 'New Delhi'
+- Entity matching: City 'Bangalore' standardized to 'Bengaluru'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Bangalore' standardized to 'Bengaluru'
+- Entity matching: City 'bangalore' standardized to 'Bengaluru'
+- Entity matching: City 'bangalore' standardized to 'Bengaluru'
+- Entity matching: City 'Delhi NCR' standardized to 'New Delhi'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Format resolution: Uppercase email 'ISHA.CHOPRA95@MAILTEST.EXAMPLE.ORG' lowercased to 'isha.chopra95@mailtest.example.org'
+- Format resolution: Uppercase email 'VARUN.SAXENA21@EXAMPLE.IN' lowercased to 'varun.saxena21@example.in'
+- Format resolution: Uppercase email 'DEEPAK.NAIR44@EXAMPLE.COM' lowercased to 'deepak.nair44@example.com'
+- Format resolution: Uppercase email 'NEHA.BHATIA60@MAILTEST.EXAMPLE.ORG' lowercased to 'neha.bhatia60@mailtest.example.org'
+- Anomaly: Invalid email format found -> react, javascript, mysql
+- Format resolution: Uppercase email 'KARAN.CHOPRA76@MAILTEST.EXAMPLE.ORG' lowercased to 'karan.chopra76@mailtest.example.org'
+- Format resolution: Uppercase email 'KAVYA.VERMA74@MAILTEST.EXAMPLE.ORG' lowercased to 'kavya.verma74@mailtest.example.org'
+- Format resolution: Uppercase email 'TANVI.REDDY80@EXAMPLE.COM' lowercased to 'tanvi.reddy80@example.com'
+- Format resolution: Uppercase email 'TANVI.SHARMA56@MAILTEST.EXAMPLE.ORG' lowercased to 'tanvi.sharma56@mailtest.example.org'
+- Format resolution: Uppercase email 'DEEPAK.NAIR57@EXAMPLE.IN' lowercased to 'deepak.nair57@example.in'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Gurgaon' standardized to 'Gurugram'
+- Entity matching: City 'bangalore' standardized to 'Bengaluru'
+- Entity matching: City 'bangalore' standardized to 'Bengaluru'
+- Format resolution: Phone number '919000000231' cleaned to '9000000231'
+- Format resolution: Phone number '+91-9000000131' cleaned to '9000000131'
+- Format resolution: Phone number '+91-9000000104' cleaned to '9000000104'
+- Format resolution: Phone number '919000000260' cleaned to '9000000260'
+- Format resolution: Phone number '+91-9000000227' cleaned to '9000000227'
+- Format resolution: Phone number '919000000263' cleaned to '9000000263'
+- Format resolution: Phone number '919000000148' cleaned to '9000000148'
+- Format resolution: Phone number '919000000106' cleaned to '9000000106'
+- Format resolution: Phone number '+91-9000000295' cleaned to '9000000295'
+- Format resolution: Phone number '919000000138' cleaned to '9000000138'
+- Format resolution: Phone number '919000000223' cleaned to '9000000223'
+- Format resolution: Phone number '919000000170' cleaned to '9000000170'
+- Format resolution: Phone number '+91-9000000162' cleaned to '9000000162'
+- Format resolution: Phone number '919000000296' cleaned to '9000000296'
+- Format resolution: Phone number '919000000161' cleaned to '9000000161'
+- Format resolution: Phone number '919000000245' cleaned to '9000000245'
+- Format resolution: Phone number '+91-9000000261' cleaned to '9000000261'
+- Entity matching: City 'Gurgaon' standardized to 'Gurugram'
+- Entity matching: City 'Delhi NCR' standardized to 'New Delhi'
+- Entity matching: City 'Delhi' standardized to 'New Delhi'
+- Entity matching: City 'Gurgaon' standardized to 'Gurugram'
+- Entity matching: City 'GURGAON' standardized to 'Gurugram'
+- Gig record missing email: nan
+- Gig record missing email: ISHA.CHOPRA95@MAILTEST.EXAMPLE.ORG
+- CBNexus record missing phone: Name
+- Entity Merge: Linked Tanvi Gupta across sources: Naukri, Gig, CBNexus (Email: tanvi.gupta31@example.com, Phone: 9000000254)
+- Entity Merge: Linked Priya Singh across sources: Naukri, CBNexus (Email: priya.singh61@mailtest.example.org, Phone: 9000000287)
+- Entity Merge: Linked Vikram Saxena across sources: Naukri, Gig, CBNexus (Email: vikram.saxena60@example.com, Phone: 9000000113)
+- Entity Merge: Linked Sahil Malhotra across sources: Naukri, CBNexus (Email: sahil.malhotra1@example.in, Phone: 9000000143)
+- Entity Merge: Linked Shreya Gupta across sources: Naukri, CBNexus (Email: shreya.gupta85@example.com, Phone: 9000000227)
+- Entity Merge: Linked Isha Chopra across sources: Naukri, Gig, CBNexus (Email: isha.chopra95@mailtest.example.org, Phone: 9000000138)
+- Entity Merge: Linked Rahul Malhotra across sources: Naukri, CBNexus (Email: rahul.malhotra69@mailtest.example.org, Phone: 9000000260)
+- Entity Merge: Linked Karan Bhatia across sources: Naukri, Gig, CBNexus (Email: karan.bhatia32@mailtest.example.org, Phone: 9000000211)
+- Entity Merge: Linked Ritu Sharma across sources: Naukri, CBNexus (Email: ritu.sharma23@mailtest.example.org, Phone: 9000000146)
+- Entity Merge: Linked Arjun Mishra across sources: Naukri, Gig, CBNexus (Email: arjun.mishra70@example.com, Phone: 9000000106)
+- Entity Merge: Linked Meera Bhatia across sources: Naukri, Gig, CBNexus (Email: meera.bhatia52@mailtest.example.org, Phone: 9000000223)
+- Entity Merge: Linked Varun Jain across sources: Naukri, Gig, CBNexus (Email: varun.jain29@example.com, Phone: 9000000263)
+- Entity Merge: Linked Arjun Mehta across sources: Naukri, CBNexus (Email: arjun.mehta9@example.in, Phone: 9000000131)
+- Entity Merge: Linked Sneha Chopra across sources: Naukri, Gig, CBNexus (Email: sneha.chopra99@example.in, Phone: 9000000162)
+- Entity Merge: Linked Deepak Mehta across sources: Naukri, CBNexus (Email: deepak.mehta86@example.in, Phone: 9000000116)
+- Duplicate person in Naukri data for person_id 23. Rows: 2. Resolution: taking first.
+- Duplicate person in Naukri data for person_id 25. Rows: 2. Resolution: taking first.
+- Entity Merge: Linked Priya Saxena across sources: Naukri, CBNexus (Email: priya.saxena61@example.com, Phone: 9000000231)
+- Entity Merge: Linked Varun Saxena across sources: Naukri, Gig, CBNexus (Email: varun.saxena21@example.in, Phone: 9000000170)
+- Entity Merge: Linked Gaurav Mehta across sources: Naukri, Gig, CBNexus (Email: gaurav.mehta79@mailtest.example.org, Phone: 9000000133)
+- Entity Merge: Linked Rohit Nair across sources: Naukri, CBNexus (Email: rohit.nair32@mailtest.example.org, Phone: 9000000268)
+- Entity Merge: Linked Deepak Nair across sources: Naukri, Gig, CBNexus (Email: deepak.nair44@example.com, Phone: 9000000296)
+- Entity Merge: Linked Rahul Chopra across sources: Naukri, Gig, CBNexus (Email: rahul.chopra70@example.com, Phone: 9000000137)
+- Entity Merge: Linked Tanvi Agarwal across sources: Naukri, Gig, CBNexus (Email: tanvi.agarwal97@example.in, Phone: 9000000148)
+- Entity Merge: Linked Nikhil Mehta across sources: Naukri, CBNexus (Email: nikhil.mehta5@example.com, Phone: 9000000104)
+- Entity Merge: Linked Isha Kapoor across sources: Naukri, Gig, CBNexus (Email: isha.kapoor54@example.com, Phone: 9000000295)
