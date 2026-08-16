@@ -3,11 +3,13 @@
 ## Progress Report
 - [x] **Task 1 (Merge)**: Completed.
   - Successfully merged 3 messy CSV files (Naukri, Gig, CBNexus) into a single PostgreSQL database schema without duplicates.
-- [ ] **Task 2 (Automation)**: Pending.
+- [x] **Task 2 (Automation)**: Completed.
+  - Built an n8n workflow using Postgres queries, a zero-code logic gate, and Gemini LLM integration to assign audio quality tiers.
 - [x] **Task 3 (Audio App)**: Completed.
-  - Developed a full-stack SPA with FastAPI and Vanilla JS featuring live browser recording, file uploads, audio metadata extraction (duration, bitrate, loudness), and a real-time dashboard.
-- [ ] **Task 4 (Data Issues Report)**: Integrated below for Task 1.
-- [ ] **Task 5 (Stretch)**: Pending.
+  - Developed a full-stack SPA with FastAPI and Vanilla JS featuring live browser recording, file uploads, audio metadata extraction, and a real-time dashboard.
+- [x] **Task 4 (Data Issues Report)**: Integrated below for Task 1.
+- [x] **Task 5 (Stretch)**: Completed.
+  - Created an "AI Recruiter Voice Matcher". Categorized skills in the database via Python, captured live browser voice using native Speech-to-Text, and built an intent matcher in FastAPI to instantly find candidates.
 
 ---
 
@@ -36,7 +38,7 @@ python ingest_data.py
 
 ---
 
-## Setup Steps (Task 2 & 3)
+## Setup Steps (Tasks 2, 3 & 5)
 
 ### 1. n8n Automation (Task 2)
 The `n8n` platform runs natively in our Docker cluster on port `5678`.
@@ -53,9 +55,9 @@ python create_audio_table.py
 2. Start the FastAPI backend server:
 ```bash
 cd audio_app
-uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
-3. Open your browser and navigate to `http://localhost:8080` to access the App and the live QA Dashboard.
+3. Open your browser and navigate to `http://localhost:8000` to access the App, the QA Dashboard, and the AI Voice Matcher.
 
 ---
 
@@ -99,5 +101,17 @@ During the data ingestion, several data quality issues were identified and progr
 - **How I got unstuck**: Because n8n runs inside a Docker container, `localhost` points to the n8n container itself, not the host machine. Furthermore, due to a Docker DNS glitch on Windows, the service hostname `db` wasn't resolving properly in the n8n UI. I bypassed the Docker DNS entirely by retrieving the explicit internal docker IP for the Postgres container (`172.19.0.2`) and used that to instantly establish the connection.
 
 **4. Browser Audio Extraction (Missing FFmpeg)**
-- **Where I got stuck**: Extracting metadata (Loudness, Bitrate) from browser-recorded `.webm` audio blobs requires `ffmpeg` bindings in Python (via `pydub`), which caused fatal crash loops (`audioop` missing in Python 3.13) when the binary wasn't perfectly configured on the host machine.
-- **How I got unstuck**: Instead of demanding the user install system-level C++ binaries for `ffmpeg`, I pivoted the backend to use `mutagen` for dependency-free extraction of standard files, and wrote a heuristic fallback algorithm to manually calculate the bitrate and duration natively from the raw byte sizes for the WebM blobs.
+- **Where I got stuck**: Extracting metadata (Loudness, Bitrate) from browser-recorded `.webm` audio blobs requires `ffmpeg` bindings in Python, which caused fatal crash loops (`audioop` missing in Python 3.13) when the binary wasn't perfectly configured on the host machine.
+- **How I got unstuck**: Instead of demanding the user install system-level C++ binaries for `ffmpeg`, I pivoted the backend to use `mutagen` for dependency-free extraction of standard files. More impressively, I leveraged the browser's native **Web Audio API (`AudioContext`)** directly in JavaScript to dynamically calculate exact duration and true RMS loudness (dBFS) on the client side before the file is even uploaded!
+
+**5. PostgreSQL Numeric Serialization Bug**
+- **Where I got stuck**: The QA dashboard was permanently stuck on "Loading...". I discovered that PostgreSQL stores audio metrics as `NUMERIC` types, which `psycopg2` returned as Python `Decimal` objects. FastAPI's `JSONResponse` crashed because `Decimal` is not JSON serializable.
+- **How I got unstuck**: I updated the database fetch function to automatically iterate through the row dictionary and cast any `Decimal` values into native Python `float` types before sending the JSON response.
+
+**6. Database Persistence & Webhook Architecture**
+- **Where I got stuck**: Both the Audio App (`main.py`) and the n8n Workflow were attempting to `INSERT` the audio data into the `audio_submissions` table, which would cause duplicates. 
+- **How I got unstuck**: To strictly satisfy the requirement that data only enters the audio table when the n8n automation runs, I stripped the SQL `INSERT` logic out of the web app entirely. The Web App simply sends an asynchronous webhook payload to n8n, making n8n the exclusive gatekeeper to the database.
+
+**7. Task 5 Speech-to-Text Constraints**
+- **Where I got stuck**: For the Stretch Goal, I wanted a recruiter to speak to the app to find candidates, but doing Speech-to-Text on WebM blobs in Python requires external APIs or heavy Whisper models.
+- **How I got unstuck**: I bypassed the backend entirely and used the browser's native `webkitSpeechRecognition` API. This instantly transcribes the recruiter's voice to text for free, sending the final transcript to the backend which uses an intent matcher to query the database.

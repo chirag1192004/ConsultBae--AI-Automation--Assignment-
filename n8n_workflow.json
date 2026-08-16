@@ -1,171 +1,258 @@
 {
-  "name": "Audio Submission QA & Auto-Triage Agent",
+  "name": "My workflow",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
-        "path": "audio-submission",
+        "path": "audio-triage",
         "options": {}
       },
-      "name": "Webhook: Task 3 Audio Submission Completed",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
-      "position": [250, 300],
-      "webhookId": "task3-audio-submission"
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "90feef8c-cc34-4dac-b6fc-7ba47449d7eb",
+      "name": "Webhook",
+      "webhookId": "2ef186db-5fae-45a4-b41e-f417f24144fd"
     },
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "SELECT * FROM consolidated_profiles WHERE phone = $1;"
+        "query": "INSERT INTO audio_submissions (\n    worker_id, phone, worker_name, audio_file_name, \n    duration_sec, sample_rate_khz, bitrate_kbps, loudness_db\n)\nSELECT \n    id, \n    '{{ $json.body.phone }}', \n    \"Full Name\", \n    '{{ $json.body.audio_file_name }}', \n    {{ $json.body.duration_sec }}, \n    {{ $json.body.sample_rate_khz }}, \n    {{ $json.body.bitrate_kbps }}, \n    {{ $json.body.loudness_db }}\nFROM consolidated_profiles\nWHERE \"Phone\" = '{{ $json.body.phone }}'\nRETURNING id, worker_id, phone, duration_sec, loudness_db;\n",
+        "options": {}
       },
-      "name": "Postgres: Fetch Worker Profile & Audio Metrics",
       "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1,
-      "position": [450, 300]
+      "typeVersion": 2.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b09966f2-30bb-42e4-82e7-97aa6dc42149",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "v2L3oTcP6fZFQaHA",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
-        "dataType": "number",
-        "value1": "={{$json.loudness}}",
-        "rules": {
-          "rules": [
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
             {
-              "operation": "largerEqual",
-              "value2": -35,
-              "output": 0
+              "id": "4fc949a0-46e4-481a-b9bc-2b1ebe532d76",
+              "leftValue": "={{ $json.duration_sec }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
             },
             {
-              "operation": "smaller",
-              "value2": -35,
-              "output": 1
+              "id": "6f1e3037-0ead-4740-b13b-12b2dd2f827c",
+              "leftValue": "={{ $json.loudness_db }}",
+              "rightValue": -35,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
-        "fallbackOutput": 1
+        "looseTypeValidation": true,
+        "options": {}
       },
-      "name": "Switch Node: Threshold Check (Loudness / Bitrate)",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 1,
-      "position": [650, 300]
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "78df08b4-6da4-42a7-8e16-9d84697f405c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an automated Audio Quality Assessor.\nEvaluate the following audio submission metrics:\n- Duration: {{ $json.duration_sec }} seconds\n  - Loudness: {{ $json.loudness_db }} dB\n\nRules:\n- If Loudness >= -18.0 dB and Duration >= 4.0s: assign tier 'Gold'\n- Otherwise: assign tier 'Silver'\n\nOutput ONLY valid JSON:\n{\"quality_tier\": \"Gold\", \"notes\": \"Clear audio levels.\"}",
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "a7b25c1f-2568-4141-8b1c-f25838410b3d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -240
+      ],
+      "id": "27dbf4cc-3122-4600-a120-3bf4dad2124b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "K0cVNOfwdxNMWm6B",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE audio_submissions\nSET qa_status = 'Approved',\n    quality_tier = '{{ JSON.parse($json.text).quality_tier }}',\n    ai_evaluation_notes = '{{ JSON.parse($json.text).notes }}'\nWHERE id = {{ $('Execute a SQL query').item.json.id }};",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "888aace2-9f61-459f-ac06-59920de03166",
+      "name": "Execute a SQL query1",
+      "credentials": {
+        "postgres": {
+          "id": "v2L3oTcP6fZFQaHA",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE audio_submissions\nSET qa_status = 'Rejected',\n    ai_evaluation_notes = 'Audio failed threshold check: volume too low or recording too short.'\nWHERE id = {{ $('Execute a SQL query').item.json.id }};",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        672,
+        96
+      ],
+      "id": "f79e45d9-7361-490c-af86-f341b32760d7",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "v2L3oTcP6fZFQaHA",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.openai.com/v1/chat/completions",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_API_KEY"
-            }
-          ]
-        },
+        "url": "https://webhook.site/26d820f0-e3ec-4ed9-b8f2-948d03251430",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [
             {
-              "name": "model",
-              "value": "gpt-4"
+              "value": "={   \"event\": \"AUDIO_QA_REJECTED\",   \"phone\": \"={{ $('Execute a SQL query').item.json.phone }}\",   \"status\": \"Rejected\",   \"alert_message\": \"Audio failed duration or loudness thresholds. Retake notification queued.\" }"
             }
           ]
-        }
+        },
+        "options": {}
       },
-      "name": "LLM: Assign Quality Tier",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [900, 150]
-    },
-    {
-      "parameters": {
-        "fromEmail": "qa@consultbae.com",
-        "toEmail": "={{$json.email}}",
-        "subject": "Action Required: Re-record your audio submission",
-        "text": "Your recent audio submission did not meet our quality standards (Loudness was too low). Please re-record."
-      },
-      "name": "Email: Send Re-record Instructions",
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 1,
-      "position": [900, 450]
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE consolidated_profiles SET gig_status = 'Certified' WHERE phone = $1;"
-      },
-      "name": "Postgres: Update Status",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1,
-      "position": [1150, 150]
-    },
-    {
-      "parameters": {
-        "operation": "executeQuery",
-        "query": "UPDATE consolidated_profiles SET gig_status = 'Review Needed' WHERE phone = $1;"
-      },
-      "name": "Postgres: Flag for Review",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1,
-      "position": [1150, 450]
+      "typeVersion": 4.5,
+      "position": [
+        896,
+        96
+      ],
+      "id": "077bb6c9-db80-4846-bc5d-7112eda6fcdf",
+      "name": "HTTP Request"
     }
   ],
+  "pinData": {},
   "connections": {
-    "Webhook: Task 3 Audio Submission Completed": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "Postgres: Fetch Worker Profile & Audio Metrics",
+            "node": "Execute a SQL query",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Postgres: Fetch Worker Profile & Audio Metrics": {
+    "Execute a SQL query": {
       "main": [
         [
           {
-            "node": "Switch Node: Threshold Check (Loudness / Bitrate)",
+            "node": "If",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Switch Node: Threshold Check (Loudness / Bitrate)": {
+    "If": {
       "main": [
         [
           {
-            "node": "LLM: Assign Quality Tier",
+            "node": "Basic LLM Chain",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Email: Send Re-record Instructions",
+            "node": "Execute a SQL query2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "LLM: Assign Quality Tier": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
       "main": [
         [
           {
-            "node": "Postgres: Update Status",
+            "node": "Execute a SQL query1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Email: Send Re-record Instructions": {
+    "Execute a SQL query2": {
       "main": [
         [
           {
-            "node": "Postgres: Flag for Review",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -174,5 +261,17 @@
     }
   },
   "active": false,
-  "settings": {}
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "767c92f5-cf2a-47b1-8b59-467e912397c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "778291555f13e0ef20ea5147fd643698cb84e24418d13aada10d5656b4f3827a"
+  },
+  "nodeGroups": [],
+  "id": "eHSBOS2NjqiDwONY",
+  "tags": []
 }

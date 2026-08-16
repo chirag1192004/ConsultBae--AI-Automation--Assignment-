@@ -14,6 +14,7 @@
             <nav>
                 <button id="nav-submit" class="active">New Submission</button>
                 <button id="nav-dashboard">Dashboard</button>
+                <button id="nav-matcher">AI Matcher</button>
             </nav>
         </header>
 
@@ -78,6 +79,41 @@
                     </thead>
                     <tbody id="table-body">
                         <!-- Rows populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- AI MATCHER VIEW -->
+        <main id="view-matcher" class="view hidden">
+            <div class="hero">
+                <h1>AI Voice Matcher</h1>
+                <p>Speak to the AI to instantly find candidates that match your required skills.</p>
+            </div>
+            
+            <div class="matcher-container">
+                <button id="voice-search-btn" class="btn primary voice-btn">
+                    🎤 Hold to Speak
+                </button>
+                <div id="transcript-box" class="transcript-box">
+                    <p><em>Waiting for voice input...</em></p>
+                </div>
+            </div>
+
+            <div id="matcher-results" class="table-wrapper hidden">
+                <h3 id="matcher-intent-title">Matches for: </h3>
+                <table id="matcher-table">
+                    <thead>
+                        <tr>
+                            <th>Candidate Name</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Skills</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matcher-table-body">
+                        <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
