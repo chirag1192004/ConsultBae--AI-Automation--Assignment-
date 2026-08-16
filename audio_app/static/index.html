@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConsultBae - Audio Collection</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-container">
+        <header>
+            <div class="logo">ConsultBae QA Agent</div>
+            <nav>
+                <button id="nav-submit" class="active">New Submission</button>
+                <button id="nav-dashboard">Dashboard</button>
+            </nav>
+        </header>
+
+        <!-- SUBMISSION VIEW -->
+        <main id="view-submit" class="view active-view">
+            <div class="hero">
+                <h1>Submit Your Audio</h1>
+                <p>Record directly in your browser or upload an existing file to get certified.</p>
+            </div>
+            
+            <form id="submission-form">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="worker_name" required placeholder="e.g. John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="worker_phone" required placeholder="e.g. 9000000000">
+                </div>
+
+                <div class="audio-controls">
+                    <div class="record-box">
+                        <button type="button" id="record-btn" class="btn primary">Start Recording</button>
+                        <span id="recording-status" class="status-indicator"></span>
+                    </div>
+                    <div class="or-divider">OR</div>
+                    <div class="upload-box">
+                        <input type="file" id="audio-upload" accept="audio/*">
+                    </div>
+                </div>
+
+                <audio id="audio-preview" controls></audio>
+                
+                <button type="submit" id="submit-btn" class="btn submit-btn" disabled>Submit Audio</button>
+            </form>
+            
+            <div id="loader" class="loader hidden">Processing and extracting audio metrics...</div>
+            <div id="success-msg" class="success-msg hidden">Submission Successful!</div>
+        </main>
+
+        <!-- DASHBOARD VIEW -->
+        <main id="view-dashboard" class="view hidden">
+            <div class="hero">
+                <h1>Audio Submissions</h1>
+                <p>Live metrics and QA triage dashboard.</p>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Worker</th>
+                            <th>Phone</th>
+                            <th>Audio</th>
+                            <th>Duration</th>
+                            <th>Quality Tier</th>
+                            <th>Loudness</th>
+                            <th>Bitrate</th>
+                            <th>Sample Rate</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+{
+  "name": "Audio Submission QA & Auto-Triage Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "audio-submission",
+        "options": {}
+      },
+      "name": "Webhook: Task 3 Audio Submission Completed",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "task3-audio-submission"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM consolidated_profiles WHERE phone = $1;"
+      },
+      "name": "Postgres: Fetch Worker Profile & Audio Metrics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "dataType": "number",
+        "value1": "={{$json.loudness}}",
+        "rules": {
+          "rules": [
+            {
+              "operation": "largerEqual",
+              "value2": -35,
+              "output": 0
+            },
+            {
+              "operation": "smaller",
+              "value2": -35,
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 1
+      },
+      "name": "Switch Node: Threshold Check (Loudness / Bitrate)",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4"
+            }
+          ]
+        }
+      },
+      "name": "LLM: Assign Quality Tier",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [900, 150]
+    },
+    {
+      "parameters": {
+        "fromEmail": "qa@consultbae.com",
+        "toEmail": "={{$json.email}}",
+        "subject": "Action Required: Re-record your audio submission",
+        "text": "Your recent audio submission did not meet our quality standards (Loudness was too low). Please re-record."
+      },
+      "name": "Email: Send Re-record Instructions",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [900, 450]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE consolidated_profiles SET gig_status = 'Certified' WHERE phone = $1;"
+      },
+      "name": "Postgres: Update Status",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1150, 150]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE consolidated_profiles SET gig_status = 'Review Needed' WHERE phone = $1;"
+      },
+      "name": "Postgres: Flag for Review",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [1150, 450]
+    }
+  ],
+  "connections": {
+    "Webhook: Task 3 Audio Submission Completed": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Fetch Worker Profile & Audio Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres: Fetch Worker Profile & Audio Metrics": {
+      "main": [
+        [
+          {
+            "node": "Switch Node: Threshold Check (Loudness / Bitrate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Node: Threshold Check (Loudness / Bitrate)": {
+      "main": [
+        [
+          {
+            "node": "LLM: Assign Quality Tier",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email: Send Re-record Instructions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: Assign Quality Tier": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email: Send Re-record Instructions": {
+      "main": [
+        [
+          {
+            "node": "Postgres: Flag for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

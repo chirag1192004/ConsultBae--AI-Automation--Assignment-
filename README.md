@@ -3,8 +3,10 @@
 ## Progress Report
 - [x] **Task 1 (Merge)**: Completed.
   - Successfully merged 3 messy CSV files (Naukri, Gig, CBNexus) into a single PostgreSQL database schema without duplicates.
-- [ ] **Task 2 (Automation)**: Pending.
-- [ ] **Task 3 (Audio App)**: Pending.
+- [x] **Task 2 (Automation)**: Completed.
+  - Built an "Audio Submission QA & Auto-Triage Agent" in n8n (exported as `n8n_workflow.json`) that processes audio data, checks thresholds, and flags for review.
+- [x] **Task 3 (Audio App)**: Completed.
+  - Developed a full-stack SPA with FastAPI and Vanilla JS featuring live browser recording, file uploads, audio metadata extraction (duration, bitrate, loudness), and a real-time dashboard.
 - [ ] **Task 4 (Data Issues Report)**: Integrated below for Task 1.
 - [ ] **Task 5 (Stretch)**: Pending.
 
@@ -32,6 +34,29 @@ Execute the Python script to clean, merge, and insert the data into the database
 python ingest_data.py
 ```
 *Note: The script also generates a local fallback CSV `consolidated_profiles.csv`.*
+
+---
+
+## Setup Steps (Task 2 & 3)
+
+### 1. n8n Automation (Task 2)
+The `n8n` platform runs natively in our Docker cluster on port `5678`.
+1. Go to `http://localhost:5678` and complete the initial setup.
+2. Click **Import from File** and upload the `n8n_workflow.json` located in this repository.
+3. Configure the **Postgres Nodes** to connect to our local DB using the internal Docker IP: `172.19.0.2` (Port: `5432`, User: `admin`, Pass: `password123`, DB: `cbnexus_db`).
+
+### 2. Audio Collection Web App (Task 3)
+We built a premium, glassmorphism-themed Audio Application.
+1. Create the necessary database table to receive audio submissions:
+```bash
+python create_audio_table.py
+```
+2. Start the FastAPI backend server:
+```bash
+cd audio_app
+uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+```
+3. Open your browser and navigate to `http://localhost:8080` to access the App and the live QA Dashboard.
 
 ---
 
@@ -69,3 +94,11 @@ During the data ingestion, several data quality issues were identified and progr
 **2. Transitive Record Linking**
 - **Where I got stuck**: I needed to merge the same person across 3 files, but realized Gig and CBNexus had absolutely no common fields (one has Email, the other has Phone).
 - **How I got unstuck**: I decided to use Graph Theory. I used the `networkx` library to represent Emails and Phones as nodes. The Naukri dataset (which has both) creates the "edges" (connections). Finding the "connected components" in this graph perfectly clustered all records belonging to the same person, allowing me to assign a single unique `person_id` across all three datasets effortlessly.
+
+**3. n8n Docker Host Routing**
+- **Where I got stuck**: While setting up the Postgres node inside n8n (Task 2), n8n returned a "Connection Refused" error when using `localhost`, and a "Host Not Found" when using the docker service name `db`. 
+- **How I got unstuck**: Because n8n runs inside a Docker container, `localhost` points to the n8n container itself. Furthermore, due to a DNS conflict with a lingering background project, `db` wasn't resolving properly. I bypassed DNS entirely by retrieving the explicit internal docker IP for the Postgres container (`172.19.0.2`) and used that to instantly establish the connection.
+
+**4. Browser Audio Extraction (Missing FFmpeg)**
+- **Where I got stuck**: Extracting metadata (Loudness, Bitrate) from browser-recorded `.webm` audio blobs requires `ffmpeg` bindings in Python (via `pydub`), which caused fatal crash loops (`audioop` missing in Python 3.13) when the binary wasn't perfectly configured on the host machine.
+- **How I got unstuck**: Instead of demanding the user install system-level C++ binaries for `ffmpeg`, I pivoted the backend to use `mutagen` for dependency-free extraction of standard files, and wrote a heuristic fallback algorithm to manually calculate the bitrate and duration natively from the raw byte sizes for the WebM blobs.
